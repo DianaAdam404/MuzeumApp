@@ -17,7 +17,7 @@ namespace MuzeumApp
         }
         public override string ToString()
         {
-            return $"Festmény: {Azonosito} | Kor években: {KorEvekben} | Becsült érték: {BecsultErtek} Ft | Biztosítási díj: {BiztositasDij()} Ft";
+            return (base.ToString()) + $" | Kor: {KorEvekben} év";
         }
     }
 }
