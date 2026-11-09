@@ -10,7 +10,7 @@ foreach (string sor in File.ReadAllLines("mutargyak.txt").Skip(1))
         continue;
     }
     string[] darabol = sor.Split('|');
-    if (darabol.Count()!=4)
+    if (darabol.Count()!= 4)
     {
         hibas++;
         continue;
@@ -26,12 +26,12 @@ foreach (string sor in File.ReadAllLines("mutargyak.txt").Skip(1))
         hibas++;
         continue;
     }
-    if (int.TryParse(darabol[2],out int ertek))
+    if (!int.TryParse(darabol[2],out int ertek))
     {
         hibas++;
         continue;
     }
-    if (int.TryParse(darabol[2], out int extra))
+    if (!int.TryParse(darabol[3], out int extra))
     {
         hibas++;
         continue;
@@ -39,3 +39,32 @@ foreach (string sor in File.ReadAllLines("mutargyak.txt").Skip(1))
     if (tipus == "M") gyujtemeny.Add(new Mutargy(darabol[1], ertek));
     else gyujtemeny.Add(new Festmeny(darabol[1], ertek, extra));
 }
+Console.WriteLine($"Sikeresen beolvasott műtárgyak: {gyujtemeny.Count} db");
+Console.WriteLine($"Kiszűrt hibás sorok száma: {hibas} db");
+Console.WriteLine("\nBeolvasott műtárgyak listája:");
+foreach(Mutargy m in gyujtemeny)
+{
+    Console.WriteLine(m);
+}
+
+Console.WriteLine("\nLINQ Statisztikák:");
+double atlag = gyujtemeny.Average(x => x.BecsultErtek);
+Console.WriteLine($"Műtárgyak átlagos értéke: {atlag:F0} Ft");
+
+Mutargy draga = gyujtemeny.MaxBy(x => x.BecsultErtek);
+Console.WriteLine($"Legértékesebb műtargy: {draga.Azonosito} ({draga.BecsultErtek}) Ft");
+
+int daragab = gyujtemeny.Count(x => x.BecsultErtek > 1000000);
+Console.WriteLine($"Milliós értéket meghaladó műtárgyak: {daragab} db");
+
+Console.WriteLine("\nFestmények külön elemzése:");
+foreach (Mutargy m in gyujtemeny)
+{
+    if(m is Festmeny fest)
+    {
+        Console.WriteLine($"-{fest.Azonosito} Festmeny kora: {fest.KorEvekben} év");
+    }
+}
+
+IEnumerable<string> kiir = gyujtemeny.OrderByDescending(x => x.BecsultErtek).Select(x => $"{x.Azonosito};{x.BecsultErtek};{x.BiztositasiDij}");
+File.WriteAllLines("riport.txt", kiir);
