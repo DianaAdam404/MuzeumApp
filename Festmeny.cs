@@ -11,7 +11,7 @@ namespace MuzeumApp
         {
             this.KorEvekben = KorEvekben;
         }
-        public override int BiztositasDij()
+        public override int BiztositasiDij()
         {
             return (int)(base.BiztositasiDij() + KorEvekben * 500);
         }
